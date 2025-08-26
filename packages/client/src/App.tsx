@@ -8,7 +8,7 @@ const App = () => {
       .then((res) => res.json())
       .then((data) => setMessage(data.message));
   }, []);
-  return <div>{message}</div>;
+  return <div className="font-bold">{message}</div>;
 };
 
 export default App;
