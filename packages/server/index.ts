@@ -26,6 +26,15 @@ const chatSchema = z.object({
     .max(1000, "Prompt is too long max 1000 characters"),
 });
 
+function cleanResponse(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/[#*_>\-]+/g, "")
+    .replace(/\n{2,}/g, "\n")
+    .trim();
+}
+
 app.post("/api/chat", async (req: Request, res: Response) => {
   try {
     const parseResult = chatSchema.safeParse(req.body);
@@ -40,9 +49,9 @@ app.post("/api/chat", async (req: Request, res: Response) => {
 
     const response = await model.generateContent([prompt]);
 
-    const text =
+    let text =
       response.response.candidates[0]?.content?.parts[0]?.text || "No response";
-
+    text = cleanResponse(text);
     res.json({ message: text });
   } catch (error) {
     console.error("Error generating content:", error);
