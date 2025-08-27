@@ -4,7 +4,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run index.ts"
+    "dev": "concurrently \"bun --watch index.ts\" \"bun --cwd client dev\"",
+    "server": "bun --watch index.ts",
+    "client": "bun --cwd client dev",
+    "build": "cd client && bun run build"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -14,6 +17,7 @@
     "typescript": "^5"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "client"
   ]
 }
